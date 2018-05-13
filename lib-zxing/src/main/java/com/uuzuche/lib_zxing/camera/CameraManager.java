@@ -40,38 +40,9 @@ public final class CameraManager {
     public static int FRAME_HEIGHT = -1;
     public static int FRAME_MARGINTOP = -1;
 
+    static final int SDK_INT = Build.VERSION.SDK_INT; // Later we can use Build.VERSION.SDK_INT
+
     private static CameraManager cameraManager;
-
-    static final int SDK_INT; // Later we can use Build.VERSION.SDK_INT
-
-    static {
-        int sdkInt;
-        try {
-            sdkInt = Integer.parseInt(Build.VERSION.SDK);
-        } catch (NumberFormatException nfe) {
-            // Just to be safe
-            sdkInt = 10000;
-        }
-        SDK_INT = sdkInt;
-    }
-
-    private final Context context;
-    private final CameraConfigurationManager configManager;
-    private Camera camera;
-    private Rect framingRect;
-    private Rect framingRectInPreview;
-    private boolean initialized;
-    private boolean previewing;
-    private final boolean useOneShotPreviewCallback;
-    /**
-     * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
-     * clear the handler so it will only receive one message.
-     */
-    private final PreviewCallback previewCallback;
-    /**
-     * Autofocus callbacks arrive here, and are dispatched to the Handler which requested them.
-     */
-    private final AutoFocusCallback autoFocusCallback;
 
     /**
      * Initializes this static object with the Context of the calling Activity.
@@ -92,6 +63,28 @@ public final class CameraManager {
     public static CameraManager get() {
         return cameraManager;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final Context context;
+    private final CameraConfigurationManager configManager;
+    private Camera camera;
+    private Rect framingRect;
+    private Rect framingRectInPreview;
+    private boolean initialized;
+    private boolean previewing;
+    private final boolean useOneShotPreviewCallback;
+    /**
+     * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
+     * clear the handler so it will only receive one message.
+     */
+    private final PreviewCallback previewCallback;
+    /**
+     * Autofocus callbacks arrive here, and are dispatched to the Handler which requested them.
+     */
+    private final AutoFocusCallback autoFocusCallback;
 
     private CameraManager(Context context) {
 

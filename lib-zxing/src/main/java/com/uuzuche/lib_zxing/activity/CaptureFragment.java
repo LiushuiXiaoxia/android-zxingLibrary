@@ -1,5 +1,6 @@
 package com.uuzuche.lib_zxing.activity;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -8,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -48,10 +50,12 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     private CodeUtils.AnalyzeCallback analyzeCallback;
     private Camera camera;
 
+    @Nullable
+    private CameraInitCallBack callBack;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         CameraManager.init(getActivity().getApplication());
 
@@ -61,23 +65,25 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
         View view = null;
         if (bundle != null) {
             int layoutId = bundle.getInt(CodeUtils.LAYOUT_ID);
             if (layoutId != -1) {
-                view = inflater.inflate(layoutId, null);
+                view = inflater.inflate(layoutId, container, false);
             }
         }
 
         if (view == null) {
-            view = inflater.inflate(R.layout.fragment_capture, null);
+            view = inflater.inflate(R.layout.fragment_capture, container, false);
         }
 
-        viewfinderView = (ViewfinderView) view.findViewById(R.id.viewfinder_view);
-        surfaceView = (SurfaceView) view.findViewById(R.id.preview_view);
+        viewfinderView = view.findViewById(R.id.viewfinder_view);
+        surfaceView = view.findViewById(R.id.preview_view);
         surfaceHolder = surfaceView.getHolder();
 
         return view;
@@ -96,8 +102,8 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         characterSet = null;
 
         playBeep = true;
-        AudioManager audioService = (AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE);
-        if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+        AudioManager audioService = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        if (audioService != null && audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
             playBeep = false;
         }
         initBeepSound();
@@ -123,9 +129,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
 
     /**
      * Handler scan result
-     *
-     * @param result
-     * @param barcode
      */
     public void handleDecode(Result result, Bitmap barcode) {
         inactivityTimer.onActivity();
@@ -179,7 +182,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasSurface = false;
         if (camera != null) {
-            if (camera != null && CameraManager.get().isPreviewing()) {
+            if (CameraManager.get().isPreviewing()) {
                 if (!CameraManager.get().isUseOneShotPreviewCallback()) {
                     camera.setPreviewCallback(null);
                 }
@@ -231,8 +234,10 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
             mediaPlayer.start();
         }
         if (vibrate) {
-            Vibrator vibrator = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
-            vibrator.vibrate(VIBRATE_DURATION);
+            Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) {
+                vibrator.vibrate(VIBRATE_DURATION);
+            }
         }
     }
 
@@ -253,9 +258,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
         this.analyzeCallback = analyzeCallback;
     }
 
-    @Nullable
-    CameraInitCallBack callBack;
-
     /**
      * Set callback for Camera check whether Camera init success or not.
      */
@@ -266,10 +268,9 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     interface CameraInitCallBack {
         /**
          * Callback for Camera init result.
+         *
          * @param e If is's null,means success.otherwise Camera init failed with the Exception.
          */
         void callBack(Exception e);
     }
-
-
 }

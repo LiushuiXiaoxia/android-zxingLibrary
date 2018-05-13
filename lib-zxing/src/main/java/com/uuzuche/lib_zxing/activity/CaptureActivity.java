@@ -27,14 +27,11 @@ public class CaptureActivity extends AppCompatActivity {
         captureFragment.setCameraInitCallBack(new CaptureFragment.CameraInitCallBack() {
             @Override
             public void callBack(Exception e) {
-                if (e == null) {
-
-                } else {
+                if (e != null) {
                     Log.e("TAG", "callBack: ", e);
                 }
             }
         });
-
     }
 
     /**

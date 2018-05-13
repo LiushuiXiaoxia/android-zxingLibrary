@@ -274,5 +274,4 @@ final class CameraConfigurationManager {
     public static int getDesiredSharpness() {
         return DESIRED_SHARPNESS;
     }
-
 }

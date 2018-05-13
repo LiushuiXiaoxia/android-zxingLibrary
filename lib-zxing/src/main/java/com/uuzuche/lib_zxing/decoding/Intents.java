@@ -21,6 +21,7 @@ package com.uuzuche.lib_zxing.decoding;
  * These strings are effectively API and cannot be changed.
  */
 public final class Intents {
+
     private Intents() {
     }
 

@@ -17,6 +17,7 @@
 package com.uuzuche.lib_zxing.decoding;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,9 +44,8 @@ public final class InactivityTimer {
 
     public void onActivity() {
         cancel();
-        inactivityFuture = inactivityTimer.schedule(new FinishListener(activity),
-                INACTIVITY_DELAY_SECONDS,
-                TimeUnit.SECONDS);
+        FinishListener listener = new FinishListener(activity);
+        inactivityFuture = inactivityTimer.schedule(listener, INACTIVITY_DELAY_SECONDS, TimeUnit.SECONDS);
     }
 
     private void cancel() {
@@ -61,11 +61,11 @@ public final class InactivityTimer {
     }
 
     private static final class DaemonThreadFactory implements ThreadFactory {
-        public Thread newThread(Runnable runnable) {
+
+        public Thread newThread(@NonNull Runnable runnable) {
             Thread thread = new Thread(runnable);
             thread.setDaemon(true);
             return thread;
         }
     }
-
 }

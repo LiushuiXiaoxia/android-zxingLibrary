@@ -79,9 +79,6 @@ public final class ViewfinderView extends View {
 
     /**
      * 初始化内部框的大小
-     *
-     * @param context
-     * @param attrs
      */
     private void initInnerRect(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewfinderView);
@@ -111,7 +108,8 @@ public final class ViewfinderView extends View {
         }
 
         // 扫描控件
-        scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.scan_light));
+        int id = ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.scan_light);
+        scanLight = BitmapFactory.decodeResource(getResources(), id);
         // 扫描速度
         SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 5);
 
@@ -151,7 +149,7 @@ public final class ViewfinderView extends View {
             if (currentPossible.isEmpty()) {
                 lastPossibleResultPoints = null;
             } else {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
+                possibleResultPoints = new HashSet<>(5);
                 lastPossibleResultPoints = currentPossible;
                 paint.setAlpha(OPAQUE);
                 paint.setColor(resultPointColor);
@@ -188,9 +186,6 @@ public final class ViewfinderView extends View {
 
     /**
      * 绘制移动扫描线
-     *
-     * @param canvas
-     * @param frame
      */
     private void drawScanLight(Canvas canvas, Rect frame) {
 
@@ -218,9 +213,6 @@ public final class ViewfinderView extends View {
 
     /**
      * 绘制取景框边框
-     *
-     * @param canvas
-     * @param frame
      */
     private void drawFrameBounds(Canvas canvas, Rect frame) {
 
@@ -237,25 +229,17 @@ public final class ViewfinderView extends View {
         int corLength = innercornerlength;
 
         // 左上角
-        canvas.drawRect(frame.left, frame.top, frame.left + corWidth, frame.top
-                + corLength, paint);
-        canvas.drawRect(frame.left, frame.top, frame.left
-                + corLength, frame.top + corWidth, paint);
+        canvas.drawRect(frame.left, frame.top, frame.left + corWidth, frame.top + corLength, paint);
+        canvas.drawRect(frame.left, frame.top, frame.left + corLength, frame.top + corWidth, paint);
         // 右上角
-        canvas.drawRect(frame.right - corWidth, frame.top, frame.right,
-                frame.top + corLength, paint);
-        canvas.drawRect(frame.right - corLength, frame.top,
-                frame.right, frame.top + corWidth, paint);
+        canvas.drawRect(frame.right - corWidth, frame.top, frame.right, frame.top + corLength, paint);
+        canvas.drawRect(frame.right - corLength, frame.top, frame.right, frame.top + corWidth, paint);
         // 左下角
-        canvas.drawRect(frame.left, frame.bottom - corLength,
-                frame.left + corWidth, frame.bottom, paint);
-        canvas.drawRect(frame.left, frame.bottom - corWidth, frame.left
-                + corLength, frame.bottom, paint);
+        canvas.drawRect(frame.left, frame.bottom - corLength, frame.left + corWidth, frame.bottom, paint);
+        canvas.drawRect(frame.left, frame.bottom - corWidth, frame.left + corLength, frame.bottom, paint);
         // 右下角
-        canvas.drawRect(frame.right - corWidth, frame.bottom - corLength,
-                frame.right, frame.bottom, paint);
-        canvas.drawRect(frame.right - corLength, frame.bottom - corWidth,
-                frame.right, frame.bottom, paint);
+        canvas.drawRect(frame.right - corWidth, frame.bottom - corLength, frame.right, frame.bottom, paint);
+        canvas.drawRect(frame.right - corLength, frame.bottom - corWidth, frame.right, frame.bottom, paint);
     }
 
 
@@ -267,15 +251,4 @@ public final class ViewfinderView extends View {
     public void addPossibleResultPoint(ResultPoint point) {
         possibleResultPoints.add(point);
     }
-
-
-    /**
-     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-     */
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-
 }
