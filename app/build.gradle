@@ -20,15 +20,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    // compile project(':lib-zxing')
-    api 'cn.yipianfengye.android:zxing-library:2.2'
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':lib-zxing')
+    // api 'cn.yipianfengye.android:zxing-library:2.2'
     api "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     api "com.android.support:design:$rootProject.supportLibraryVersion"
     api 'pub.devrel:easypermissions:0.2.1'
 
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

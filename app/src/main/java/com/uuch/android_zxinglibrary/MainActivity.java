@@ -55,21 +55,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
     /**
-     * 初始化权限事件
-     */
-    private void initPermission() {
-        //检查权限
-        String[] permissions = CheckPermissionUtils.checkPermission(this);
-        if (permissions.length == 0) {
-            //权限都申请了
-            //是否登录
-        } else {
-            //申请权限
-            ActivityCompat.requestPermissions(this, permissions, 100);
-        }
-    }
-
-    /**
      * 初始化组件
      */
     private void initView() {
@@ -92,11 +77,24 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         button4.setOnClickListener(new ButtonOnClickListener(button4.getId()));
     }
 
+    /**
+     * 初始化权限事件
+     */
+    private void initPermission() {
+        //检查权限
+        String[] permissions = CheckPermissionUtils.checkPermission(this);
+        if (permissions.length == 0) {
+            //权限都申请了
+            //是否登录
+        } else {
+            //申请权限
+            ActivityCompat.requestPermissions(this, permissions, 100);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // 处理二维码扫描结果
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE) {// 处理二维码扫描结果
             //处理扫描结果（在界面上显示）
             if (null != data) {
                 Bundle bundle = data.getExtras();
@@ -110,10 +108,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
                 }
             }
-        }
-
-        // 选择系统图片并解析
-        else if (requestCode == REQUEST_IMAGE) {
+        } else if (requestCode == REQUEST_IMAGE) { // 选择系统图片并解析
             if (data != null) {
                 Uri uri = data.getData();
                 try {
@@ -138,7 +133,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
     }
 
-
     /**
      * EasyPermissions接管权限处理逻辑
      */
@@ -152,17 +146,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-
-    @AfterPermissionGranted(REQUEST_CAMERA_PERM)
-    public void cameraTask(int viewId) {
-        if (EasyPermissions.hasPermissions(this, CAMERA)) {
-            // Have permission, do the thing!
-            onClick(viewId);
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(this, "需要请求camera权限", REQUEST_CAMERA_PERM, CAMERA);
-        }
-    }
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
@@ -182,7 +165,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     .show();
         }
     }
-
 
     /**
      * 按钮点击监听
@@ -208,6 +190,17 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             } else {
                 cameraTask(buttonId);
             }
+        }
+    }
+
+    @AfterPermissionGranted(REQUEST_CAMERA_PERM)
+    public void cameraTask(int viewId) {
+        if (EasyPermissions.hasPermissions(this, CAMERA)) {
+            // Have permission, do the thing!
+            onClick(viewId);
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(this, "需要请求camera权限", REQUEST_CAMERA_PERM, CAMERA);
         }
     }
 
