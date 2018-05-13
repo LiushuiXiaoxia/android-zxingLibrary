@@ -1,18 +1,18 @@
 /*
-******************************* Copyright (c)*********************************\
-**
-**                 (c) Copyright 2015, 蒋朋, china, qd. sd
-**                          All Rights Reserved
-**
-**                           By()
-**
-**
-**-----------------------------------版本信息------------------------------------
-** 版    本: V0.1
-**
-**------------------------------------------------------------------------------
-********************************End of Head************************************\
-*/
+ ******************************* Copyright (c)*********************************\
+ **
+ **                 (c) Copyright 2015, 蒋朋, china, qd. sd
+ **                          All Rights Reserved
+ **
+ **                           By()
+ **
+ **
+ **-----------------------------------版本信息------------------------------------
+ ** 版    本: V0.1
+ **
+ **------------------------------------------------------------------------------
+ ********************************End of Head************************************\
+ */
 
 package com.uuch.android_zxinglibrary;
 
@@ -24,6 +24,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
+import static android.os.Build.VERSION_CODES.KITKAT;
 
 /**
  * 文 件 名: ImageUtil
@@ -46,7 +48,7 @@ public class ImageUtil {
     public static String getImageAbsolutePath(Context context, Uri imageUri) {
         if (context == null || imageUri == null)
             return null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, imageUri)) {
+        if (android.os.Build.VERSION.SDK_INT >= KITKAT && DocumentsContract.isDocumentUri(context, imageUri)) {
             if (isExternalStorageDocument(imageUri)) {
                 String docId = DocumentsContract.getDocumentId(imageUri);
                 String[] split = docId.split(":");
@@ -56,7 +58,8 @@ public class ImageUtil {
                 }
             } else if (isDownloadsDocument(imageUri)) {
                 String id = DocumentsContract.getDocumentId(imageUri);
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                Uri uri = Uri.parse("content://downloads/public_downloads");
+                Uri contentUri = ContentUris.withAppendedId(uri, Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             } else if (isMediaDocument(imageUri)) {
                 String docId = DocumentsContract.getDocumentId(imageUri);
