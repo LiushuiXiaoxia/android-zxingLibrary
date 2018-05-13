@@ -3,18 +3,31 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+ext {
+    // Sdk and tools
+    minSdkVersion = 14
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.3'
+
+    // App dependencies
+    supportLibraryVersion = '27.1.1'
+    constraintlayoutVersion = '1.1.0'
+}
 
 allprojects {
     repositories {
         jcenter()
+        google()
     }
 }
 
